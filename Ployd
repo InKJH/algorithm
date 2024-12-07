@@ -185,39 +185,73 @@ public class FloydAlgorithm01 {
 				network.connectStations(line4[i], line4[i + 1], line4Times[i]);
 			}
 
-			// 부산 동해선
-			String[] Donghaeline = { "부전", "거제해맞이", "거제", "교대", "동래(동해선)", "안락", "부산원동", "재송", "센텀", "벡스코", "신해운대",
-					"송정", "오시리아", "기장", "일광", "좌천(동해선)", "월내", "서생", "남창", "망양", "덕하", "개운포", "태화강" };
-			int[] DonghaelineTimes = { 3, 2, 2, 2, 2, 2, 2, 2, 2, 4, 3, 2, 4, 3, 5, 4, 3, 7, 4, 4, 3, 5 };
-			for (int i = 0; i < Math.min(Donghaeline.length - 1, DonghaelineTimes.length); i++) {
-				network.addStation(Donghaeline[i], "동해선");
-				network.addStation(Donghaeline[i + 1], "동해선");
-				network.connectStations(Donghaeline[i], Donghaeline[i + 1], DonghaelineTimes[i]);
+			// 토성역 - 감천문화마을 2번 버스
+			String[] bus2 = { "토성", "감천문화마을" };
+			int[] bus2Times = { 10 };
+			for (int i = 0; i < Math.min(bus2.length - 1, bus2Times.length); i++) {
+				network.addStation(bus2[i], "2번버스");
+				network.addStation(bus2[i + 1], "2번버스");
+				network.connectStations(bus2[i], bus2[i + 1], bus2Times[i]);
 			}
-			
-			// 부산 부산김해선
-			String[] BGline = { "사상", "괘법르네시떼", "서부산유통지구", "공항", "덕두", "등구", "대저", "평강", "대사", "불암", "지내", "김해대학",
-					"인제대", "김해시청", "부원", "봉황", "수로왕릉", "박물관", "연지공원", "장신대", "가야대" };
-			int[] BGline4imes = { 1, 3, 2, 2, 2, 3, 1, 2, 2, 1, 1, 2, 1, 1, 2, 1, 1, 2, 2, 2 };
-			for (int i = 0; i < Math.min(BGline.length - 1, BGline4imes.length); i++) {
-				network.addStation(BGline[i], "부산김해선");
-				network.addStation(BGline[i + 1], "부산김해선");
-				network.connectStations(BGline[i], BGline[i + 1], BGline4imes[i]);
+
+			// 장산역 - 오시리아역 - 롯데리아 어드벤처 부산 1001번 버스 + 도보 중 버스
+			String[] bus1001 = { "장산", "오시리아" };
+			int[] bus1001Times = { 18 };
+			for (int i = 0; i < Math.min(bus1001.length - 1, bus1001Times.length); i++) {
+				network.addStation(bus1001[i], "1001번버스");
+				network.addStation(bus1001[i + 1], "1001번버스");
+				network.connectStations(bus1001[i], bus1001[i + 1], bus1001Times[i]);
+			}
+
+			// 서면역 - 롯데백화점 부산본점 도보
+			String[] walk1 = { "서면", "롯데백화점 부산본점" };
+			int[] walk1Times = { 2 };
+			for (int i = 0; i < Math.min(walk1.length - 1, walk1Times.length); i++) {
+				network.addStation(walk1[i], "도보");
+				network.addStation(walk1[i + 1], "도보");
+				network.connectStations(walk1[i], walk1[i + 1], walk1Times[i]);
+			}
+
+			// 장산역 - 오시리아역 - 롯데리아 어드벤처 부산 1001번 버스 + 도보 중 도보
+			String[] walk2 = { "오시리아", "롯데리아 어드벤처 부산" };
+			int[] walk2Times = { 10 };
+			for (int i = 0; i < Math.min(walk2.length - 1, walk2Times.length); i++) {
+				network.addStation(walk2[i], "도보");
+				network.addStation(walk2[i + 1], "도보");
+				network.connectStations(walk2[i], walk2[i + 1], walk2Times[i]);
+			}
+
+			// 종합운동장역 - 부산아시아드주경기장 도보
+			String[] walk3 = { "종합운동장", "부산아시아드주경기장" };
+			int[] walk3Times = { 22 };
+			for (int i = 0; i < Math.min(walk3.length - 1, walk3Times.length); i++) {
+				network.addStation(walk3[i], "도보");
+				network.addStation(walk3[i + 1], "도보");
+				network.connectStations(walk3[i], walk3[i + 1], walk3Times[i]);
+			}
+
+			// 동래역 - 명륜자이아파트 도보
+			String[] walk4 = { "동래", "명륜자이아파트" };
+			int[] walk4Times = { 4 };
+			for (int i = 0; i < Math.min(walk4.length - 1, walk4Times.length); i++) {
+				network.addStation(walk4[i], "도보");
+				network.addStation(walk4[i + 1], "도보");
+				network.connectStations(walk4[i], walk4[i + 1], walk4Times[i]);
 			}
 
 			// 환승 정보
 			network.connectStations("서면", "서면", 5); // 1호선 - 2호선
 			network.connectStations("연산", "연산", 5); // 1호선 - 3호선
 			network.connectStations("동래", "동래", 5); // 1호선 - 4호선
-			network.connectStations("부전", "부전", 5); // 1호선 - 동해선
-			network.connectStations("교대", "교대", 5); // 1호선 - 동해선
 			network.connectStations("덕천", "덕천", 5); // 2호선 - 3호선
-			network.connectStations("사상", "사상", 5); // 2호선 - 부산김해선
 			network.connectStations("수영", "수영", 5); // 2호선 - 3호선
-			network.connectStations("벡스코", "벡스코", 5); // 2호선 - 동해선
 			network.connectStations("미남", "미남", 5); // 3호선 - 4호선
-			network.connectStations("거제", "거제", 5); // 3호선 - 동해선
-			network.connectStations("대저", "대저", 5); // 3호선 - 부산김해선
+			network.connectStations("토성", "토성", 5); // 토성역 - 감천문화마을 2번 버스
+			network.connectStations("장산", "장산", 5); // 장산역 - 오시리아역 - 롯데리아 어드벤처 부산 1001번 버스 + 도보 중 버스
+			network.connectStations("서면", "서면", 5); // 서면역 - 롯데백화점 부산본점 도보
+			network.connectStations("오시리아", "오시리아", 5); // 장산역 - 오시리아역 - 롯데리아 어드벤처 부산 1001번 버스 + 도보 중 도보
+			network.connectStations("종합운동장", "종합운동장", 5); // 종합운동장역 - 부산아시아드주경기장 도보
+			network.connectStations("동래", "동래", 5); // 동래역 - 명륜자이아파트 도보
 
 			if (!network.stations.containsKey(start) || !network.stations.containsKey(destination)) {
 				System.out.println("잘못된 역 이름입니다. 프로그램을 종료합니다.");

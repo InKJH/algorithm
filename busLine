@@ -1,0 +1,175 @@
+private void initializeSubwayData() {
+		double scale = 1; // 축소 비율
+
+		// 환승역 이름
+		Set<String> transferStations = new HashSet<>(Arrays.asList("서면", "덕천", "미남", "동래", "종합운동장", "토성"));
+
+		// 환승역 좌표를 계산하여 통일
+		Map<String, int[]> transferCoordinates = new HashMap<>();
+		computeTransferCoordinates(transferStations, transferCoordinates, scale);
+
+		// 부산 1호선
+		String[] line1 = { "다대포해수욕장", "다대포항", "낫개", "신장림", "장림", "동매", "신평", "하단", "당리", "사하", "괴정", "대티", "서대신", "동대신",
+				"토성", "자갈치", "남포", "중앙", "부산역", "초량", "부산진", "좌천", "범일", "범내골", "서면", "부전", "양정", "시청", "연산", "교대",
+				"동래", "명륜", "온천장", "부산대", "장전", "구서", "두실", "남산", "범어사", "노포" };
+		int[] line1Times = { 3, 2, 3, 3, 2, 3, 3, 2, 2, 2, 3, 3, 2, 2, 2, 2, 2, 3, 2, 2, 2, 3, 3, 2, 2, 2, 2, 3, 2, 2,
+				3, 2, 2, 3, 3, 2, 2, 2, 3 };
+
+		int[] line1X = scaleCoordinates(new int[] { 69, 71, 71, 72, 73, 88, 126, 174, 214, 268, 314, 363, 410, 459, 504,
+				551, 592, 615, 615, 615, 615, 615, 615, 615, 615, 615, 615, 615, 615, 615, 615, 615, 615, 615, 615, 615,
+				615, 615, 615, 615 }, scale);
+
+		int[] line1Y = scaleCoordinates(new int[] { 601, 630, 660, 688, 722, 745, 769, 768, 768, 764, 767, 765, 765,
+				765, 766, 764, 748, 718, 692, 668, 645, 622, 598, 575, 546, 502, 466, 418, 381, 343, 301, 276, 249, 224,
+				169, 152, 142, 116, 89, 64 }, scale);
+
+		addLine(line1, line1X, line1Y, line1Times, "1호선");
+
+		// 부산 2호선
+		String[] line2 = { "장산", "중동", "해운대", "동백", "벡스코", "센텀시티", "민락", "수영", "광안", "금련산", "남천", "경성대부경대", "대연", "못골",
+				"지게골", "문현", "국제금융센터부산은행", "전포", "서면", "부암", "가야", "동의대", "개금", "냉정", "주례", "감전", "사상", "덕포", "모덕",
+				"모라", "구남", "구명", "덕천", "수정", "화명", "율리", "동원", "금곡", "호포", "증산", "부산대양산캠퍼스", "남양산", "양산" };
+		int[] line2Times = { 2, 2, 3, 2, 3, 2, 2, 2, 3, 2, 2, 3, 2, 2, 2, 3, 2, 2, 2, 2, 3, 2, 3, 2, 2, 2, 3, 2, 3, 2,
+				2, 3, 2, 3, 2, 3, 3, 3, 2, 2, 3, 3 };
+
+		int[] line2X = scaleCoordinates(new int[] { 1148, 1121, 1072, 1027, 977, 931, 900, 887, 887, 887, 887, 884, 847,
+				788, 729, 689, 679, 659, 615, 579, 540, 499, 460, 420, 382, 356, 343, 343, 343, 343, 343, 343, 343, 343,
+				343, 343, 343, 343, 343, 343, 343, 343, 343 }, scale);
+
+		int[] line2Y = scaleCoordinates(new int[] { 312, 350, 350, 350, 350, 350, 364, 433, 478, 538, 591, 649, 688,
+				689, 686, 654, 604, 559, 546, 546, 546, 546, 546, 546, 541, 519, 490, 461, 431, 400, 369, 337, 302, 276,
+				251, 228, 204, 181, 158, 133, 111, 85, 63 }, scale);
+
+		addLine(line2, line2X, line2Y, line2Times, "2호선");
+
+		// 부산 3호선
+		String[] line3 = { "수영", "망미", "배산", "물만골", "연산", "거제", "종합운동장", "사직", "미남", "만덕", "남산정", "숙등", "덕천", "구포",
+				"강서구청", "체육공원", "대저" };
+		int[] line3X = scaleCoordinates(
+				new int[] { 887, 840, 753, 676, 615, 595, 571, 559, 553, 510, 456, 399, 342, 305, 263, 230, 214 },
+				scale);
+		int[] line3Y = scaleCoordinates(
+				new int[] { 434, 380, 380, 380, 380, 380, 375, 364, 343, 300, 300, 300, 300, 300, 300, 324, 353 },
+				scale);
+		int[] line3Times = { 2, 2, 3, 2, 3, 2, 2, 2, 3, 2, 2, 3, 2, 2, 2, 3 };
+
+		addLine(line3, line3X, line3Y, line3Times, "3호선");
+
+		// 부산 4호선
+		String[] line4 = { "미남", "동래", "수안", "낙민", "충렬사", "명장", "서동", "금사", "반여농산물시장", "석대", "영산대", "반여", "재송", "센텀" };
+		int[] line4X = scaleCoordinates(
+				new int[] { 554, 615, 670, 709, 745, 783, 820, 868, 885, 886, 886, 886, 886, 886 }, scale);
+		int[] line4Y = scaleCoordinates(
+				new int[] { 341, 300, 300, 300, 300, 300, 300, 285, 252, 216, 178, 149, 98, 68 }, scale);
+		int[] line4Times = { 2, 2, 3, 2, 3, 2, 2, 2, 3, 2, 2, 3, 2 };
+
+		addLine(line4, line4X, line4Y, line4Times, "4호선");
+
+		// 토성역 - 감천문화마을 2번버스
+		String[] bus2 = { "토성", "감천문화마을" };
+		int[] bus2X = scaleCoordinates(new int[] { 504, 500 }, scale);
+		int[] bus2Y = scaleCoordinates(new int[] { 766, 730 }, scale);
+		int[] bus2Times = { 10 };
+
+		addLine(bus2, bus2X, bus2Y, bus2Times, "2번버스");
+
+		// 장산역 - 오시리아역 1001번버스
+		String[] bus1001 = { "장산", "오시리아" };
+		int[] bus1001X = scaleCoordinates(new int[] { 1148, 1013 }, scale);
+		int[] bus1001Y = scaleCoordinates(new int[] { 312, 254 }, scale);
+		int[] bus1001Times = { 18 };
+
+		addLine(bus1001, bus1001X, bus1001Y, bus1001Times, "1001번버스");
+
+		// 서면역 - 롯데백화점 부산본점 도보
+		String[] walk1 = { "서면", "롯데백화점 부산본점" };
+		int[] walk1X = scaleCoordinates(new int[] { 615, 590 }, scale);
+		int[] walk1Y = scaleCoordinates(new int[] { 546, 560 }, scale);
+		int[] walk1Times = { 2 };
+
+		addLine(walk1, walk1X, walk1Y, walk1Times, "도보");
+
+		// 오시리아역 - 롯데리아 어드벤처 부산 도보
+		String[] walk2 = { "오시리아", "롯데리아 어드벤처 부산" };
+		int[] walk2X = scaleCoordinates(new int[] { 1013, 1052 }, scale);
+		int[] walk2Y = scaleCoordinates(new int[] { 254, 244 }, scale);
+		int[] walk2Times = { 10 };
+
+		addLine(walk2, walk2X, walk2Y, walk2Times, "도보");
+
+		// 종합운동장역 - 부산아시아드주경기장 도보
+		String[] walk3 = { "종합운동장", "부산아시아드주경기장" };
+		int[] walk3X = scaleCoordinates(new int[] { 571, 540 }, scale);
+		int[] walk3Y = scaleCoordinates(new int[] { 375, 400 }, scale);
+		int[] walk3Times = { 22 };
+
+		addLine(walk3, walk3X, walk3Y, walk3Times, "도보");
+
+		// 동래역 - 명륜자이아파트 도보
+		String[] walk4 = { "동래", "명륜자이아파트" };
+		int[] walk4X = scaleCoordinates(new int[] { 615, 630 }, scale);
+		int[] walk4Y = scaleCoordinates(new int[] { 301, 285 }, scale);
+		int[] walk4Times = { 4 };
+
+		addLine(walk4, walk4X, walk4Y, walk4Times, "도보");
+
+		// 동일 좌표를 환승역에 적용
+		applyTransferCoordinates(transferCoordinates);
+	}
+
+
+private boolean walkingRoute(String from, String to) {
+		Set<String> walkingRoutes = new HashSet<>(
+				Arrays.asList("종합운동장-부산아시아드주경기장", "동래-명륜자이아파트", "서면-롯데백화점 부산본점", "오시리아-롯데리아 어드벤처 부산"));
+
+		return walkingRoutes.contains(from + "-" + to) || walkingRoutes.contains(to + "-" + from);
+	}
+
+	private boolean busRoute(String from, String to) {
+		Set<String> busRoutes = new HashSet<>(Arrays.asList("토성-감천문화마을", "장산-오시리아"));
+
+		return busRoutes.contains(from + "-" + to) || busRoutes.contains(to + "-" + from);
+	}
+
+private void highlightShortestPath(String start, String end) {
+		highlightedPath.clear();
+		java.util.List<String> path = floyd(start, end);
+		for (int i = 0; i < path.size() - 1; i++) {
+			String from = path.get(i);
+			String to = path.get(i + 1);
+			String lineName = findLineName(from, to);
+
+			// 경로를 확인
+			if (walkingRoute(from, to)) {
+				highlightedPath.add(new Line(stations.get(from).x, stations.get(from).y, stations.get(to).x,
+						stations.get(to).y, "도보"));
+			} else if (busRoute(from, to)) {
+				highlightedPath.add(new Line(stations.get(from).x, stations.get(from).y, stations.get(to).x,
+						stations.get(to).y, "버스"));
+			} else {
+				highlightedPath.add(new Line(stations.get(from).x, stations.get(from).y, stations.get(to).x,
+						stations.get(to).y, lineName));
+			}
+		}
+	}
+
+
+
+private void drawHighlightedPath(Graphics g) {
+		Graphics2D g2 = (Graphics2D) g; // Graphics 객체를 Graphics2D로
+		g.setColor(Color.RED);
+		g2.setStroke(new BasicStroke(4)); // 선의 두께를 4로 설정 (숫자를 조정하면 두께 변경)
+
+		for (Line line : highlightedPath) {
+			if ("도보".equals(line.lineName)) {
+				g.setColor(Color.GREEN); // 도보 경로는 초록색으로 표시
+			} else if ("버스".equals(line.lineName)) {
+				g.setColor(Color.ORANGE); // 버스 경로는 주황색으로 표시
+			} else {
+				g.setColor(Color.RED); // 지하철 경로는 빨간색으로 표시
+			}
+			g.drawLine(line.x1, line.y1, line.x2, line.y2);
+		}
+		g2.setStroke(new BasicStroke(1)); // 원래 두께로
+
+	}

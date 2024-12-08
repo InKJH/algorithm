@@ -194,7 +194,7 @@ public class FloydAlgorithm01 {
 				network.connectStations(bus2[i], bus2[i + 1], bus2Times[i]);
 			}
 
-			// 장산역 - 오시리아역 - 롯데리아 어드벤처 부산 1001번 버스 + 도보 중 버스
+			// 장산역 - 오시리아역 1001번버스
 			String[] bus1001 = { "장산", "오시리아" };
 			int[] bus1001Times = { 18 };
 			for (int i = 0; i < Math.min(bus1001.length - 1, bus1001Times.length); i++) {
@@ -212,7 +212,7 @@ public class FloydAlgorithm01 {
 				network.connectStations(walk1[i], walk1[i + 1], walk1Times[i]);
 			}
 
-			// 장산역 - 오시리아역 - 롯데리아 어드벤처 부산 1001번 버스 + 도보 중 도보
+			// 오시리아역 - 롯데리아 어드벤처 부산 도보
 			String[] walk2 = { "오시리아", "롯데리아 어드벤처 부산" };
 			int[] walk2Times = { 10 };
 			for (int i = 0; i < Math.min(walk2.length - 1, walk2Times.length); i++) {

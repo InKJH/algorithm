@@ -46,27 +46,30 @@ public class FloydAlgorithm01 {
 		}
 
 		// 최단 경로를 계산하는 메소드 (플로이드 알고리즘 사용)
-		public int findShortestPath(String start, String destination) {
-			List<String> listStations = new ArrayList<>(stations.keySet());
-			int distances = stations.size();
-			int firstStation = listStations.indexOf(start);
-			int lastStation = listStations.indexOf(destination);
-			int[][] dist = new int[distances][distances];
-			int[][] previous = new int[distances][distances]; // 경로 추적용
+		public int[] findSecondShortestPath(String start, String destination) {
+			List<String> listStations = new ArrayList<>(stations.keySet()); // 역 이름 리스트
+			int numStations = stations.size();
+			int startIdx = listStations.indexOf(start); // 출발지 역의 인덱스
+			int destIdx = listStations.indexOf(destination); // 도착지 역의 인덱스
 
-			// 모든 역 간의 거리 배열을 초기화
-			for (int from = 0; from < distances; from++) {
-				for (int to = 0; to < distances; to++) {
+			// 플로이드-워셜 알고리즘을 위한 거리와 경로 기록 배열
+			int[][] dist = new int[numStations][numStations];
+			int[][] previous = new int[numStations][numStations];
+
+			// 배열 초기화 및 초기 거리 설정
+			for (int from = 0; from < numStations; from++) {
+				for (int to = 0; to < numStations; to++) {
 					if (from == to) {
 						dist[from][to] = 0;
-						previous[from][to] = -1;
+						previous[from][to] = to;
 					} else {
 						dist[from][to] = Integer.MAX_VALUE;
 						previous[from][to] = -1;
 					}
 				}
 			}
-			// 역 간 배열 채우기
+
+			// 최초의 모든 역 연결 정보 반영
 			for (String station : stations.keySet()) {
 				int from = listStations.indexOf(station);
 				Station currentStation = stations.get(station);
@@ -79,53 +82,119 @@ public class FloydAlgorithm01 {
 				}
 			}
 
-			// 모든 역에 대해 최단 경로 계산
-			for (int mid = 0; mid < distances; mid++) {
-				for (int from = 0; from < distances; from++) {
-					for (int to = 0; to < distances; to++) {
+			// 플로이드-워셜 알고리즘으로 최단 경로 계산
+			for (int mid = 0; mid < numStations; mid++) {
+				for (int from = 0; from < numStations; from++) {
+					for (int to = 0; to < numStations; to++) {
 						if (dist[from][mid] != Integer.MAX_VALUE && dist[mid][to] != Integer.MAX_VALUE) {
 							if (dist[from][to] > dist[from][mid] + dist[mid][to]) {
 								dist[from][to] = dist[from][mid] + dist[mid][to];
-								previous[from][to] = previous[mid][to]; // 경로 업데이트
+								previous[from][to] = previous[mid][to];
 							}
 						}
 					}
 				}
 			}
 
-			List<String> path = new ArrayList<>();
-			List<String> transfer = new ArrayList<>(); // 환승역을 저장할 리스트
-			List<String> transferLine = new ArrayList<>();
-			String previousLine = null;
-			int current = lastStation;
-
-			// 도착점부터 시작점까지 역을 거꾸로 추적
-			while (current != firstStation) {
-				path.add(listStations.get(current)); // 현재 역을 경로에 추가
-				current = previous[firstStation][current]; // 이전 역으로 이동
+			// 첫 번째 최단 경로 찾기
+			List<String> firstPath = new ArrayList<>();
+			int current = destIdx;
+			while (current != startIdx) {
+				firstPath.add(listStations.get(current));
+				current = previous[startIdx][current];
 			}
-			path.add(listStations.get(firstStation)); // 시작점 추가
-			Collections.reverse(path); // 다시 경로 뒤집기
+			firstPath.add(listStations.get(startIdx));
+			Collections.reverse(firstPath);
+			int firstShortestTime = dist[startIdx][destIdx];
+			System.out.println("첫 번째 최단 경로: " + String.join(" -> ", firstPath));
 
-			for (int i = 0; i < path.size(); i++) {
-				String station = path.get(i);
-				String currentLine = stations.get(station).line; // 현재 역의 정보
+			// 두 번째 최단 경로를 찾기
+			int secondShortestTime = Integer.MAX_VALUE;
+			List<String> bestSecondPath = null;
 
-				// 환승역 찾기
-				if (previousLine != null && !currentLine.equals(previousLine)) {
-					transfer.add(station);
+			// 첫 번째 경로의 각 구간을 하나씩 제거하면서 최단 경로를 재계산
+			for (int i = 0; i < firstPath.size() - 1; i++) {
+				String station1 = firstPath.get(i);
+				String station2 = firstPath.get(i + 1);
+
+				// 임시로 현재 구간 제거
+				int originalTime = stations.get(station1).connections.get(station2);
+				stations.get(station1).connections.remove(station2);
+				stations.get(station2).connections.remove(station1);
+
+				// 새로운 경로 계산
+				dist = new int[numStations][numStations];
+				previous = new int[numStations][numStations];
+				for (int from = 0; from < numStations; from++) {
+					for (int to = 0; to < numStations; to++) {
+						if (from == to) {
+							dist[from][to] = 0;
+							previous[from][to] = to;
+						} else {
+							dist[from][to] = Integer.MAX_VALUE;
+							previous[from][to] = -1;
+						}
+					}
 				}
-				previousLine = currentLine; // 현재 역의 호선을 이전 호선으로 설정
+
+				// 초기 거리 설정
+				for (String station : stations.keySet()) {
+					int from = listStations.indexOf(station);
+					Station currentStation = stations.get(station);
+					for (Map.Entry<String, Integer> entry : currentStation.connections.entrySet()) {
+						String neighbor = entry.getKey();
+						int time = entry.getValue();
+						int to = listStations.indexOf(neighbor);
+						dist[from][to] = time;
+						previous[from][to] = from;
+					}
+				}
+
+				// 플로이드-워셜 알고리즘으로 최단 경로 계산
+				for (int mid = 0; mid < numStations; mid++) {
+					for (int from = 0; from < numStations; from++) {
+						for (int to = 0; to < numStations; to++) {
+							if (dist[from][mid] != Integer.MAX_VALUE && dist[mid][to] != Integer.MAX_VALUE) {
+								if (dist[from][to] > dist[from][mid] + dist[mid][to]) {
+									dist[from][to] = dist[from][mid] + dist[mid][to];
+									previous[from][to] = previous[mid][to];
+								}
+							}
+						}
+					}
+				}
+
+				// 현재 구간이 제거된 상태에서의 최단 경로
+				int currentTime = dist[startIdx][destIdx];
+				if (currentTime != Integer.MAX_VALUE && currentTime > firstShortestTime
+						&& currentTime < secondShortestTime) {
+					secondShortestTime = currentTime;
+
+					// 새로운 경로 추적
+					List<String> secondPath = new ArrayList<>();
+					int secCurrent = destIdx;
+					while (secCurrent != startIdx) {
+						secondPath.add(listStations.get(secCurrent));
+						secCurrent = previous[startIdx][secCurrent];
+					}
+					secondPath.add(listStations.get(startIdx));
+					Collections.reverse(secondPath);
+					bestSecondPath = secondPath;
+				}
+
+				// 제거했던 구간 복구
+				stations.get(station1).connections.put(station2, originalTime);
+				stations.get(station2).connections.put(station1, originalTime);
 			}
 
-			for (String station : transfer) {
-				String lineName = stations.get(station).line; // 역이 속한 호선
-				transferLine.add("(" + lineName + ")" + station);
+			if (bestSecondPath != null) {
+				System.out.println("두 번째 최단 경로: " + String.join(" -> ", bestSecondPath));
+			} else {
+				System.out.println("두 번째 경로를 찾을 수 없습니다.");
+				secondShortestTime = -1;
 			}
 
-			System.out.println("Path: " + String.join(" -> ", path));
-			System.out.println("환승역: " + String.join(", ", transferLine));
-			return dist[firstStation][lastStation];
+			return new int[] { firstShortestTime, secondShortestTime };
 		}
 
 		public static void main(String[] args) {
@@ -256,10 +325,12 @@ public class FloydAlgorithm01 {
 			if (!network.stations.containsKey(start) || !network.stations.containsKey(destination)) {
 				System.out.println("잘못된 역 이름입니다. 프로그램을 종료합니다.");
 			} else {
-				int shortestTime = network.findShortestPath(start, destination);
-				System.out.println("최단 시간: " + shortestTime + " 분");
+				int shortestTime = network.findSecondShortestPath(start, destination);
+				System.out.println("첫 번째 최단 시간: " + shortestTimes[0] + "분");
+				System.out.println("두 번째 최단 시간: " + shortestTimes[1] + "분");
 			}
 
+			scanner.close();	
 			long endTime = System.nanoTime();
 			long elapsedTime = endTime - startTime;
 			System.out.println(String.format("총 알고리즘이 걸린 시간: %,d나노초(ns) == %,f밀리초(ms) == %,f초(s)", elapsedTime,

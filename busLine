@@ -2,7 +2,8 @@ private void initializeSubwayData() {
 		double scale = 1; // 축소 비율
 
 		// 환승역 이름
-		Set<String> transferStations = new HashSet<>(Arrays.asList("서면", "덕천", "미남", "동래", "종합운동장", "토성"));
+		Set<String> transferStations = new HashSet<>(
+				Arrays.asList("서면", "덕천", "미남", "동래", "종합운동장", "토성", "장산", "오시리아"));
 
 		// 환승역 좌표를 계산하여 통일
 		Map<String, int[]> transferCoordinates = new HashMap<>();
